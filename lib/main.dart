@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:learn_ff/asset_utils.dart';
 import 'package:learn_ff/button/button_demo.dart';
 import 'package:learn_ff/form/form_demo.dart';
+import 'package:learn_ff/http/http_demo.dart';
 import 'package:learn_ff/image/image_demo.dart';
 import 'package:learn_ff/layout.dart';
 import 'package:learn_ff/view_code.dart';
@@ -33,6 +34,28 @@ class ContentShow extends StatelessWidget {
 
   final String title;
 
+  final Map<String,String> widgetsMap = {
+    "DART_BASE":"Dart语法基础数据类型及操作",
+    "DART_CLASS":"Dart类常见操作",
+    "DART_METHOD":"Dart类常见操作",
+    "DART_ASYNC":"Dart异步常见操作",
+    "BUTTON":"按钮组件",
+    "LAYOUT":"布局组件",
+    "IMAGE":"图片组件",
+    "FORM":"FORM组件",
+    "WEBVIEW":"WEBVIEW组件",
+    "HTTP":"Http请求",
+    "LIST":"列表组件",
+    "GESTUREDETECTOR":"手势组件",
+    "HTTP1":"Http请求",
+    "HTTP2":"Http请求",
+    "HTTP3":"Http请求",
+    "HTTP4":"Http请求",
+    "HTTP5":"Http请求",
+    "HTTP6":"Http请求",
+    "HTTP7":"Http请求",
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,87 +66,17 @@ class ContentShow extends StatelessWidget {
 
   Widget genListView(BuildContext context){
       List<Widget> widgets = new List();
-      widgets.add(new Center(
-        child: ListTile(
-          leading: new Icon(Icons.list),
-          title: Text("Dart语法基础数据类型及操作"),
-          trailing: new Icon(Icons.keyboard_arrow_right),
-          onTap: ()=>listClick(context, "DART_BASE",),
-        ),
-        )
-      );
-      widgets.add(new Center(
-        child: ListTile(
-          leading: new Icon(Icons.list),
-          title: Text("Dart类常见操作"),
-          trailing: new Icon(Icons.keyboard_arrow_right),
-          onTap: ()=>listClick(context, "DART_CLASS",),
-        ),
-        )
-      );
-      widgets.add(new Center(
-        child: ListTile(
-          leading: new Icon(Icons.list),
-          title: Text("Dart方法常见操作"),
-          trailing: new Icon(Icons.keyboard_arrow_right),
-          onTap: ()=>listClick(context, "DART_METHOD",),
-        ),
-        )
-      );
-      widgets.add(new Center(
-        child: ListTile(
-          leading: new Icon(Icons.list),
-          title: Text("Dart异步常见操作"),
-          trailing: new Icon(Icons.keyboard_arrow_right),
-          onTap: ()=>listClick(context, "DART_ASYNC",),
-        ),
-        )
-      );
-      widgets.add(new Center(
-        child: ListTile(
-          leading: new Icon(Icons.list),
-          title: Text("按钮组件"),
-          trailing: new Icon(Icons.keyboard_arrow_right),
-          onTap: ()=>listClick(context, "BUTTON"),
-        ),
-        )
-      );
-      widgets.add(new Center(
-        child: ListTile(
-          leading: new Icon(Icons.list),
-          title: Text("布局组件"),
-          trailing: new Icon(Icons.keyboard_arrow_right),
-          onTap: ()=>listClick(context, "LAYOUT"),
-        ),
-        )
-      );
-      widgets.add(new Center(
-        child: ListTile(
-          leading: new Icon(Icons.list),
-          title: Text("图片组件"),
-          trailing: new Icon(Icons.keyboard_arrow_right),
-          onTap: ()=>listClick(context, "IMAGE"),
-        ),
-        )
-      );
-      widgets.add(new Center(
-        child: ListTile(
-          leading: new Icon(Icons.list),
-          title: Text("Form组件"),
-          trailing: new Icon(Icons.keyboard_arrow_right),
-          onTap: ()=>listClick(context, "FORM"),
-        ),
-        )
-      );
-      widgets.add(new Center(
-        child: ListTile(
-          leading: new Icon(Icons.list),
-          title: Text("WebView组件"),
-          trailing: new Icon(Icons.keyboard_arrow_right),
-          onTap: ()=>listClick(context, "WEBVIEW"),
-        ),
-        )
-      );
+      widgetsMap.forEach((String key, String value){
+        var center = new Center(
+          child: ListTile(
+            leading: new Icon(Icons.list),
+            title: Text(value),
+            trailing: new Icon(Icons.keyboard_arrow_right),
+            onTap: ()=>listClick(context, key,),
+          ),
+        );
+        widgets.add(center);
+      });
 
       return new ListView(
         children: widgets,
@@ -210,6 +163,11 @@ class ContentShow extends StatelessWidget {
       case "WEBVIEW":
         Navigator.push(context, MaterialPageRoute(builder: (context){
           return WebViewDemo();
+        }));
+        break; 
+      case "HTTP":
+        Navigator.push(context, MaterialPageRoute(builder: (context){
+          return HttpDemo();
         }));
         break; 
       default:
