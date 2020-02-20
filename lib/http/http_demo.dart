@@ -90,6 +90,9 @@ class _HttpDemoState extends State<HttpDemo>{
   }
 
   _getMetaData() async {
+    this.setState((){
+      this.content = "loading...";
+    });
     var response = await http.get(textEditingController.text);
     if (response.statusCode == 200) {
       var body = response.body;
