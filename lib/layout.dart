@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:learn_ff/layout/all_layout.dart';
 import 'package:learn_ff/layout/column_layout.dart';
 import 'package:learn_ff/layout/row_layout.dart';
+import 'package:learn_ff/layout/scaffold_demo.dart';
 import 'package:learn_ff/layout/stack_layout.dart';
 import 'package:learn_ff/layout/wrap_layout.dart';
 
@@ -65,6 +66,15 @@ class LayoutDemo extends StatelessWidget{
         ),
         )
       );
+      widgets.add(new Center(
+        child: ListTile(
+          leading: new Icon(Icons.list),
+          title: Text("Scaffold"),
+          trailing: new Icon(Icons.keyboard_arrow_right),
+          onTap: ()=>listClick(context, "SCAFFOLD"),
+        ),
+        )
+      );
 
       return new ListView(
         children: widgets,
@@ -100,6 +110,11 @@ class LayoutDemo extends StatelessWidget{
           return new AllLayoutDemo();
         }));
         break;  
+      case "SCAFFOLD":
+        Navigator.push(context, MaterialPageRoute(builder: (context){
+          return new ScaffoldDemo();
+        }));
+        break; 
       default:
         print("Nothing Happened!");
     }
