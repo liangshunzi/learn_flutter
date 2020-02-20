@@ -1,0 +1,99 @@
+
+  //函数基本格式, Dart中函数亦是对象
+  bool isNoble(int atomicNumber){
+    return true;
+  }
+
+  //返回类型可以省略, 但自己写的时候尽量不要这样写
+  isNoble2(){
+    return false;
+  }
+
+  //如果只有一句话可以用箭头符号表示, 执行结果即是返回值
+  var _nobleGases = [];
+  bool isNoble3(int atomicNumber) => _nobleGases[atomicNumber] != null;
+
+
+  //命名参数,使用{}的方式,强制调用的时候必须带上参数名,可读性更高,调用方式见main
+  enableFlags( {bold: true, hidden: false} ){
+    print("bold is $bold and hidden is $hidden");
+  }
+
+  //可选参数, height参数为可选参数,调用的时候可以不填
+  ableSelect(String name, int age, [int height]){
+    var str = "name is $name age is $age";
+    if(null != height){
+      str += " height is $height";
+    }
+
+    print(str);
+  }
+  //可选参数赋默认值
+  String say(String from, String msg,
+      [String device = 'carrier pigeon', String mood]) {
+    var result = '$from says $msg';
+    if (device != null) {
+      result = '$result with a $device';
+    }
+    if (mood != null) {
+      result = '$result (in a $mood mood)';
+    }
+    return result;
+  }
+
+  //正常的List Map参数
+  void doStuff1(List<int> list, Map<String,String> gifts){
+
+  }
+  //命名参数
+  void doStuff2({List<int> list, Map<String,String> gifts}){
+
+  }
+  //List Map直接可默认值, 此处相当于doStuff(){ var list = [1,2,3] ...}
+  void doStuff(
+      {List<int> list = const [1, 2, 3],
+        Map<String, String> gifts = const {
+          'first': 'paper',
+          'second': 'cotton',
+          'third': 'leather'
+        }}) {
+    print('list:  $list');
+    print('gifts: $gifts');
+  }
+
+
+  //函数可以作为参数传递
+  int sun(int a, int b){
+    return a+b;
+  }
+
+  int sun2(int c, sun){
+    return c + sun;
+  }
+
+  main(){
+
+    //调用时,需要显式的增加参数名
+    enableFlags(bold: true, hidden: false);
+
+    //可选参数,最后一个参数可以不增加
+    ableSelect("weidagao", 33);
+    ableSelect("weidagao", 33, 176);
+    var list = [1,2,3];
+    var map = {"name":"weidagao"};
+    doStuff1(list, map);
+    doStuff2(list: list, gifts: map);
+
+    print(sun2(1, sun(3,4)));
+
+    //匿名函数,此处forEach()中即为传递了一个匿名函数
+    var list2 = ['apples', 'bananas', 'oranges'];
+    list2.forEach((item) {
+      print('${list2.indexOf(item)}: $item');
+    });
+
+  }
+
+
+
+

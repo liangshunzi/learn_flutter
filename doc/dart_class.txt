@@ -1,0 +1,129 @@
+
+class Point{
+
+  num x;
+  num y;
+  num z = 0;
+  num _c = 0;
+
+  Point.origin(){
+
+  }
+
+  Point(num x, num y){
+    this.x = x;
+    this.y = y;
+  }
+}
+
+class Person{
+  String name;
+  int age;
+  //构造函数只有一个name
+  Person.initName(String name){
+    this.name = name;
+  }
+
+  Person.origin(){
+
+  }
+
+  Person.initNameAge(String name, int age){
+    this.name = name;
+    this.age = age;
+  }
+
+  Person(String name, int age){
+    this.name = name;
+    this.age = age;
+  }
+
+  void showInfo(){
+    print("name is ${this.name} age is ${this.age} ");
+  }
+}
+
+//继承方式
+class Employee extends Person{
+  int height;
+
+  Employee.origin():super.initName("weidagao"){
+
+  }
+
+  Employee(String name, int age, num height):super(name, age){
+    this.height = height;
+  }
+  
+  void showInfo(){
+    print("name is ${this.name} age is ${this.age} height is ${this.height}");
+  }
+}
+
+class Impostor implements Person {
+  get name => '';
+
+  get age => 12;
+
+  void showInfo() => 'Hi 111. Do you know who I am?';
+
+  @override
+  void set age(int _age) {
+    // TODO: implement age
+  }
+
+  @override
+  void set name(String _name) {
+    // TODO: implement name
+  }
+
+}
+
+//定义get set计算属性
+class Rectangle {
+  num left, top, width, height;
+
+  //构造函数赋值简写
+  Rectangle(this.left, this.top, this.width, this.height);
+
+  // 定义两个计算属性： right 和 bottom。
+  num get right => left + width;
+  set right(num value) => left = value - width;
+  num get bottom => top + height;
+  set bottom(num value) => top = value - height;
+}
+
+// 这个类被定义为抽象类，
+// 所以不能被实例化。
+abstract class AbstractContainer {
+  // 定义构造行数，字段，方法...
+  num add(num x, num y){
+    return x + y;
+  }
+  void updateChildren(); // 抽象方法。
+}
+
+//泛型
+abstract class Cache<T> {
+  T getByKey(String key);
+  void setByKey(String key, T value);
+}
+
+void main(){
+
+  var p1 = new Point(2, 3);
+  p1.x = 1;
+  p1.y = 2;
+  p1._c = 3;
+
+  var p2 = new Point.origin();
+
+  var p = new Person("weidagao", 33);
+  var e = new Employee("weidagao", 33, 178);
+  p.showInfo();
+  e.showInfo();
+}
+
+
+
+

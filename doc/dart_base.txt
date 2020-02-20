@@ -1,0 +1,120 @@
+main(){
+    //如果b为null则给值123 否则b值不变
+    var b;
+    b ??= "123"
+    //String类型
+    var name = "wei.dagao";
+    //类型一旦确定则给其它类型会报错
+    //name = 123;
+    //整形
+    var age = 33;
+    var height = 123.3;
+    height = 176.5;
+    height = 177;
+    //Boolean
+    var isMan = true;
+    print(name);
+
+    //obj 类型可以实现不同类型赋值
+    Object obj = 123;
+    obj = "ddd";
+    //动态类型也是可以支持不同数据类型赋值
+    dynamic h = 222;
+    h = "222";
+    //两者区别:
+    //dynamic类型将会推测变量所有可能的类型, 所以当确认'h'包含某个方法时,是可以直接调用的, 比如, h 为字符串类型, 可以调用 字符串类型的属性或方法
+    print(h.length);
+    //但Object类型却不是, 他只把对象标识为Object类型, 因此也只能调用Object的方法,通过代码看obj为字符串, 但如果调用length方法会报错
+    //print(obj.length);
+
+    //常量类型, const必须初始化,因为无法二次赋值
+    const book = "面具";
+    //再次赋值会报错
+    //  book = "再次赋值";
+
+    final computer = "dell";
+    //再次赋值会报错, 暂时看不出有啥区别
+    //  computer = "dell";
+
+
+    //定义一个超长字符串
+    var article = '''
+        这是一个越长的字符串
+        是的
+        很长的
+    ''';
+    print("article is  $article");
+
+    //除了var 声明外还有几个基本类型可以声明变量
+    String mouse = "Mouse";
+    int num = 40;
+    bool big = true;
+
+    //未初始化的所有变量值都为null!!!即是是int类型, dart中所有变量都是对象
+    int cc;
+    print("cc is $cc");
+
+
+    //Number类型分int double
+    int one = 1;
+    double one1 = 1.1;
+    //将字符串转化为数字
+    int two = int.parse('2');
+    double tow1 = double.parse('2.2');
+
+    String str = 123.toString();
+    String piAsString = 3.14159.toStringAsFixed(2);
+    print("pi value is $piAsString");
+    assert(piAsString == '3.14');
+
+    //使用 == 判断两个字符串对象是否相同
+    var s1 = "weidagao";
+    var s2 = "weidagao";
+    print("$s1" == "$s2");
+
+
+    //数组类型,用中括号表示
+    var list = [1, 2, 3];
+    assert(list.length == 3);
+    assert(list[1] == 2);
+
+    //赋值静态类型,修改会报错
+    var constantList = const [1, 2, 3];
+    // constantList[1] = 1; // 取消注释会引起错误。
+
+    //Set集合类类型用 大括号表示 以下自动推断类型为Set<String>
+    var names = {'weidagao','liangchengfang','weiliangshun','weiliangyu'};
+
+
+    //空Set, 如果不加<String> 默认会当成Map处理
+    var names2 = <String>{};
+    names2.add("weidagao");
+    // 这样也是可以的
+    Set<String> names4 = {};
+
+
+
+    //Map类型,也是用大括号表示
+    var gifts = {
+        // Key:    Value
+        'first': 'partridge',
+        'second': 'turtledoves',
+        'fifth': 'golden rings'
+    };
+
+    //也可以用构造创建,其中new关键字可选
+    var gifts1 = new Map();
+    gifts1['first'] = 'partridge';
+    gifts1['second'] = 'turtledoves';
+    gifts1['fifth'] = 'golden rings';
+    //这样也可以
+    var ll = Map();
+  }
+
+
+
+
+
+
+
+

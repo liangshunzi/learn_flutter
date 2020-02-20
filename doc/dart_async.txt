@@ -1,0 +1,152 @@
+//Dart类库有非常多的返回Future或者Stream对象的函数。 这些函数被称为异步函数：它们只会在设置好一些耗时操作之后返回，比如像 IO操作。而不是等到这个操作完成。
+//async和await关键词支持了异步编程，允许您写出和同步代码很像的异步代码。
+
+Future<String> login(String userName, String pwd){
+  //用户登录
+};
+Future<String> getUserInfo(String id){
+  //获取用户信息
+};
+Future saveUserInfo(String userInfo){
+  // 保存用户信息
+};
+
+void main(){
+
+
+  //Future为异步执行类,有多个方法
+  //delayed方法代表延迟多长时间执行某个操作
+  //then方法代表异步执行成功,最后回调该方法
+  //catchError 代表异步执行异常抛了错误,会被该方法捕捉到
+  //whenComplete 代表所有操作都执行完,最后会调用该方法,比如涉及文件读写,最后不论成功还是失败,都要关闭读写流
+  //wait 表示等待多个异步接口并行执行,再将结果一同返回给then
+  Future.delayed(new Duration(seconds: 2),(){
+    return "hi world!";
+  }).then((data){
+    print(data);
+  });
+
+  //延迟执行,及异常捕捉
+  Future.delayed(new Duration(seconds: 4),(){
+    //return "hi world!";
+    throw AssertionError("Error");
+  }).then((data){
+    //执行成功会走到这里
+    print("success");
+  }).catchError((e){
+    //执行失败会走到这里
+    print(e);
+  }).whenComplete((){
+    print("不论成功还是失败进会进来,跟try catch中的finally一致");
+  });
+
+  //错误不在catchError中捕获, 而在then中第三个参数捕获
+  Future.delayed(new Duration(seconds: 2), () {
+    //return "hi world!";
+    throw AssertionError("Error");
+  }).then((data) {
+    print("success");
+  }, onError: (e) {
+    print(e);
+  });
+
+
+  //wait 将两个delayed方法一同执行,最后结果转化成数组作为参数回调给then方法
+  Future.wait([
+    // 2秒后返回结果
+    Future.delayed(new Duration(seconds: 2), () {
+      return "hello";
+    }),
+    // 4秒后返回结果
+    Future.delayed(new Duration(seconds: 4), () {
+      return " world";
+    })
+  ]).then((results){
+    print(results[0]+results[1]);
+  }).catchError((e){
+    print(e);
+  });
+
+  //
+  //app用户登陆--> 返回token
+  //根据token --> 返回用户基本信息
+  //保存用户基本信息到本地
+  //这三步都是异步操作
+  //用Future实现如下
+  //先分别定义各个异步任务
+ 
+
+  //错误实现
+  login("alice","******").then((id){
+    //登录成功后通过，id获取用户信息
+    getUserInfo(id).then((userInfo){
+      //获取用户信息后保存
+      saveUserInfo(userInfo).then((){
+        //保存用户信息，接下来执行其它操作
+      });
+    });
+  })
+
+  //正确实现
+  login("alice","******").then((id){
+      return getUserInfo(id);
+  }).then((userInfo){
+      return saveUserInfo(userInfo);
+  }).then((e){
+     //执行接下来的操作
+  }).catchError((e){
+    //错误处理
+    print(e);
+  });
+
+  //Stream 也是用于接收异步事件数据，和Future 不同的是，它可以接收多个异步操作的结果（成功或失败）。
+  // 也就是说，在执行异步任务时，可以通过多次触发成功或失败事件来传递结果数据或错误异常。
+  // Stream 常用于会多次读取数据的异步任务场景，如网络内容下载、文件读写等。
+  Stream.fromFutures([
+    // 1秒后返回结果
+    Future.delayed(new Duration(seconds: 1), () {
+      return "hello 1";
+    }),
+    // 抛出一个异常
+    Future.delayed(new Duration(seconds: 2),(){
+      throw AssertionError("Error");
+    }),
+    // 3秒后返回结果
+    Future.delayed(new Duration(seconds: 3), () {
+      return "hello 3";
+    })
+  ]).listen((data){
+    print(data);
+  }, onError: (e){
+    print(e.message);
+  },onDone: (){
+
+  });
+
+}
+
+//async/await
+//async 用户标识方法为异步方法,且返回类型为Future
+//await 用户调用一个异步方法,且等待其返回结果
+task() async {
+  try{
+    String id = await login("alice","******");
+    String userInfo = await getUserInfo(id);
+    await saveUserInfo(userInfo);
+    //执行接下来的操作
+  } catch(e){
+    //错误处理
+    print(e);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
