@@ -60,6 +60,8 @@ flutter:
    - doc/button_demo.txt
    - doc/http_demo.txt
    - doc/scaffold_demo.txt
+   - doc/listview_demo.txt
+   - doc/list_view_data.txt
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
