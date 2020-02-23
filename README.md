@@ -13,12 +13,28 @@ Flutter 学习
 - Form组件
 - WebView组件
 - Http请求
-- 列表组件(待完成)
+- 列表组件(实现上拉加载更多下拉刷新)
+- 网格组件(待完成)
 - 手势组件(待完成)
 
 
 ![image](https://github.com/liangshunzi/self_image/blob/master/1.gif)
 
+
+如何使用(需要打开模拟器,或设备):
+
+```
+git clone git@github.com:liangshunzi/learn_flutter.git
+cd learn_flutter
+flutter run 
+```
+
+打包命令:
+```
+cd learn_flutter
+flutter build apk
+
+```
 
 
 
