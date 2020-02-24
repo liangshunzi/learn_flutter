@@ -30,6 +30,7 @@ class _ListViewState extends State<ListViewDemo>{
   //假设80条后为最后一页数据,这里简单处理,实际并非如此
   //最后一页不再显示转圈的加载更多的状态,而是显示没有数据了
   final int total = 80;
+  final int pageSize = 16;
 
   @override
   void initState() {
@@ -43,7 +44,7 @@ class _ListViewState extends State<ListViewDemo>{
       if(_scrollController.position.pixels == _scrollController.position.maxScrollExtent){
         //如果记录数还是小于总数则继续下拉下一页数据
         //如果已经超过该值,则不再加载数据,并且最后一条数据显示没有数据了.
-        if(index < total){
+        if(index < total && (datas.length % pageSize) == 0){
           this._getMetaData();
         }
       }
@@ -103,8 +104,8 @@ class _ListViewState extends State<ListViewDemo>{
 
   //显示一个正在加载的转圈图标
   Widget _buildProcessIndicator(){
-    //如果显示的数量已经超过了total,则显示已经没有数据了
-    if(index > total){
+    //如果该页数据小于17条,或者超过80,则显示没有数据了
+    if(index >= total || (datas.length % pageSize) != 0){
       return Center(
         child: Text('已经没有数据了!', style: TextStyle(color:Colors.red)),
       );
@@ -151,6 +152,7 @@ class _ListViewState extends State<ListViewDemo>{
       ),
       //RefreshIndicator组件为flutter的下拉刷新组件,
       body: RefreshIndicator(
+        displacement: 20.0, //下拉距离 达到20像素则调用onRefresh方法,默认40.0
         //一旦其子组件下拉到一定距离,则会触发其onRefresh方法,并且显示重新加载的图标
         onRefresh: _onRefresh, 
         child: ListView.separated(
@@ -221,7 +223,7 @@ class _ListViewState extends State<ListViewDemo>{
 
   //原数据清空,重新加载数据等操作,必须是异步 Future
   Future<void> _onRefresh() async {
-    await Future.delayed(Duration(seconds: 2)).then((e){
+    await Future.delayed(Duration(seconds: 1)).then((e){
       setState(() {
         refresh ++;
         datas.clear();
@@ -232,4 +234,7 @@ class _ListViewState extends State<ListViewDemo>{
   }
 
 }
+
+
+
 

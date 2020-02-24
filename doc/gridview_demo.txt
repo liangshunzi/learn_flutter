@@ -1,0 +1,134 @@
+import 'package:flutter/material.dart';
+import 'package:learn_ff/view_code.dart';
+import 'dart:convert' as convert;
+import '../asset_utils.dart';
+
+class GridViewDemo extends StatefulWidget{
+  @override
+  _GridViewDemoState createState() {
+    return new _GridViewDemoState();
+  }
+
+}
+
+//风格状组件
+class _GridViewDemoState extends State<GridViewDemo>{
+
+  ScrollController _scrollController = new ScrollController();
+  List datas = new List();
+  int index = 0;
+
+  @override
+  void initState() {
+    _getMetaData();
+    super.initState();
+    //增加监听
+    _scrollController.addListener((){
+      //如果列表滚动到了最后一行继续加载数据, 这里实际上应该判定有没有到结尾了,如果到了结尾则不应该再加载数据了.
+      //此处只看原理,作简化处理,详细见listView组件
+      if(_scrollController.position.pixels == _scrollController.position.maxScrollExtent){
+        this._getMetaData();
+      }
+    });
+  }
+
+  //从文件中加载数据
+  _getMetaData(){
+    AssetsUtils.loadAssetsString("doc/list_view_data.txt").then((value){
+      var objs = convert.jsonDecode(value);
+      for(int i = 0; i< objs.length; i++){
+        index ++;
+        objs[i]['title'] = '标题:'+index.toString();
+        setState(() {
+          datas.add(objs[i]);
+        });
+      }
+    }).catchError((error){
+      print("error happened! $error");
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("网格组件示例"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.rate_review),
+            tooltip: '查看代码实现',
+            onPressed: ()=> {
+              AssetsUtils.loadAssetsString("doc/gridview_demo.txt").then(
+                (value){
+                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                      return new ViewCode(title: '网格组件代码实现', content: value);
+                    }));
+                }
+              ).catchError(
+                (error){
+                  print("error happened! $error");
+                }
+              )
+            }
+          )
+        ],
+      ),
+      //刷新组件, 下拉刷新,自动调用onRefresh方法
+      body: RefreshIndicator(
+        displacement: 20.0, //下拉距离 达到20像素则调用onRefresh方法,默认40.0
+        child: GridView.builder(
+          padding: EdgeInsets.all(15.0), //padding
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount( //行个数确定模式
+            crossAxisCount: 3, //一行多少个
+            mainAxisSpacing: 15.0,  //一行之间元素间距
+            crossAxisSpacing: 15.0, //两个行之间间距
+            childAspectRatio: 1.0,  //子组件宽高比例
+          ), 
+          itemBuilder: _itemBuilder,
+          controller: _scrollController,
+          itemCount: datas.length + 1,
+          physics: BouncingScrollPhysics(),
+        ), 
+        onRefresh: _onRefresh,
+      ),
+    );
+  }
+
+  Widget _itemBuilder(BuildContext context, int index){
+    if(index == datas.length){
+      return Center(
+       child: Text('加载中...', style: TextStyle(color: Colors.blueGrey)), 
+      );
+    }else{
+      return Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Image.network(datas[index]['picUrl']),
+            Text(datas[index]['title'])
+          ],
+        ),
+      );
+    }
+  }
+
+  //refresh方法为默认异步方法
+  Future<void> _onRefresh() async {
+    await Future.delayed(Duration(seconds: 1)).then((e){
+      setState(() {
+        datas.clear();
+        index = 0;
+        this._getMetaData();
+      });
+    });
+  }
+
+}
+
+
+
+
+
+
+
+

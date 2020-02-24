@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:learn_ff/asset_utils.dart';
 import 'package:learn_ff/button/button_demo.dart';
 import 'package:learn_ff/form/form_demo.dart';
+import 'package:learn_ff/gridview/gridview_demo.dart';
 import 'package:learn_ff/http/http_demo.dart';
 import 'package:learn_ff/image/image_demo.dart';
 import 'package:learn_ff/layout.dart';
@@ -46,7 +47,8 @@ class ContentShow extends StatelessWidget {
     "FORM":"FORM组件",
     "WEBVIEW":"WEBVIEW组件",
     "HTTP":"Http请求",
-    "LIST":"列表组件",
+    "LIST":"列表组件(下拉刷新上拉加载)",
+    "GRID":"网络组件(下拉刷新上拉加载)",
     "GESTUREDETECTOR":"手势组件",
     "HTTP1":"Http请求",
     "HTTP2":"Http请求",
@@ -176,6 +178,11 @@ class ContentShow extends StatelessWidget {
           return ListViewDemo();
         }));
         break; 
+      case 'GRID':
+        Navigator.push(context, MaterialPageRoute(builder: (context){
+          return GridViewDemo();
+        }));
+        break;
       default:
         print("Nothing Happened!");
     }

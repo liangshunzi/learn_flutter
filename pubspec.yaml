@@ -62,6 +62,7 @@ flutter:
    - doc/scaffold_demo.txt
    - doc/listview_demo.txt
    - doc/list_view_data.txt
+   - doc/gridview_demo.txt
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
