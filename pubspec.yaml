@@ -27,6 +27,7 @@ dependencies:
   path_provider: ^1.6.0
   flutter_webview_plugin: ^0.3.10+1
   http: ^0.12.0+4
+  sqflite: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +64,7 @@ flutter:
    - doc/listview_demo.txt
    - doc/list_view_data.txt
    - doc/gridview_demo.txt
+   - doc/gesture_demo.txt
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

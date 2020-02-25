@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:learn_ff/asset_utils.dart';
 import 'package:learn_ff/button/button_demo.dart';
 import 'package:learn_ff/form/form_demo.dart';
+import 'package:learn_ff/gesturedetector/gesturedetector_demo.dart';
 import 'package:learn_ff/gridview/gridview_demo.dart';
 import 'package:learn_ff/http/http_demo.dart';
 import 'package:learn_ff/image/image_demo.dart';
@@ -50,7 +51,7 @@ class ContentShow extends StatelessWidget {
     "LIST":"列表组件(下拉刷新上拉加载)",
     "GRID":"网络组件(下拉刷新上拉加载)",
     "GESTUREDETECTOR":"手势组件",
-    "HTTP1":"Http请求",
+    "SQFLITE":"持久化sqflite操作",
     "HTTP2":"Http请求",
     "HTTP3":"Http请求",
     "HTTP4":"Http请求",
@@ -181,6 +182,11 @@ class ContentShow extends StatelessWidget {
       case 'GRID':
         Navigator.push(context, MaterialPageRoute(builder: (context){
           return GridViewDemo();
+        }));
+        break;
+      case 'GESTUREDETECTOR':
+        Navigator.push(context, MaterialPageRoute(builder: (context){
+          return GesturedetectorDemo();
         }));
         break;
       default:

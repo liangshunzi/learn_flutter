@@ -15,7 +15,8 @@ Flutter 学习
 - Http请求
 - 列表组件(实现上拉加载更多下拉刷新)
 - 网格组件(实现上拉加载更多下拉刷新)
-- 手势组件(待完成)
+- 手势组件
+- Sqlite操作(未实现)
 
 
 ![image](https://github.com/liangshunzi/self_image/blob/master/1.gif)
