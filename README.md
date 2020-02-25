@@ -19,7 +19,11 @@ Flutter 学习
 - Sqlite操作(未实现)
 
 
-![image](https://github.com/liangshunzi/self_image/blob/master/1.gif)
+![image](https://github.com/liangshunzi/self_image/blob/master/2.gif)
+
+![image](https://github.com/liangshunzi/self_image/blob/master/3.gif)
+
+![image](https://github.com/liangshunzi/self_image/blob/master/4.gif)
 
 
 如何使用(需要打开模拟器,或设备):

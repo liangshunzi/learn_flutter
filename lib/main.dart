@@ -52,12 +52,6 @@ class ContentShow extends StatelessWidget {
     "GRID":"网络组件(下拉刷新上拉加载)",
     "GESTUREDETECTOR":"手势组件",
     "SQFLITE":"持久化sqflite操作",
-    "HTTP2":"Http请求",
-    "HTTP3":"Http请求",
-    "HTTP4":"Http请求",
-    "HTTP5":"Http请求",
-    "HTTP6":"Http请求",
-    "HTTP7":"Http请求",
   };
 
   @override
