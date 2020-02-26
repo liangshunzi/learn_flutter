@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learn_ff/asset_utils.dart';
 import 'package:learn_ff/button/button_demo.dart';
+import 'package:learn_ff/db/sqlflite_demo.dart';
 import 'package:learn_ff/form/form_demo.dart';
 import 'package:learn_ff/gesturedetector/gesturedetector_demo.dart';
 import 'package:learn_ff/gridview/gridview_demo.dart';
@@ -181,6 +182,11 @@ class ContentShow extends StatelessWidget {
       case 'GESTUREDETECTOR':
         Navigator.push(context, MaterialPageRoute(builder: (context){
           return GesturedetectorDemo();
+        }));
+        break;
+      case 'SQFLITE':
+        Navigator.push(context, MaterialPageRoute(builder: (context){
+          return SqlfLiteDemo();
         }));
         break;
       default:

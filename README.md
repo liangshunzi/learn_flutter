@@ -16,7 +16,8 @@ Flutter 学习
 - 列表组件(实现上拉加载更多下拉刷新)
 - 网格组件(实现上拉加载更多下拉刷新)
 - 手势组件
-- Sqlite操作(未实现)
+- Sqflite持久化操作
+- 基础组件调用(未实现)
 
 
 ![image](https://github.com/liangshunzi/self_image/blob/master/2.gif)

@@ -1,0 +1,407 @@
+//db_operator.dart
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+import 'package:meta/meta.dart';
+
+class SqlManager{
+
+  static const _VERSION=1;
+
+  static const _NAME="my.db";
+
+  static Database _database;
+
+
+  ///初始化
+  static init() async {
+    var databasesPath=await getDatabasesPath();
+    String path = join(databasesPath, _NAME);
+    _database=await openDatabase(path,version: _VERSION,onCreate: (Database db,int version) async{});
+  }
+
+  ///判断表是否存在
+  static isTableExits(String tableName) async {
+    await getCurrentDatabase();
+    var res=await _database.rawQuery("select * from Sqlite_master where type = 'table' and name = '$tableName'");
+    return res!=null && res.length >0;
+  }
+
+  ///获取当前数据库对象
+  static Future<Database> getCurrentDatabase() async {
+    if(_database == null){
+      await init();
+    }
+    return _database;
+  }
+
+  ///关闭
+  static close() {
+    _database?.close();
+    _database = null;
+  }
+}
+
+
+
+abstract class BaseDbProvider {
+  bool isTableExits = false;
+
+  createTableString();
+
+  getTableName();
+
+  ///创建表sql语句
+  tableBaseString(String sql) {
+    return sql;
+  }
+
+  Future<Database> getDataBase() async {
+    return await open();
+  }
+
+  ///super 函数对父类进行初始化
+  @mustCallSuper
+  prepare(name, String createSql) async {
+    isTableExits = await SqlManager.isTableExits(name);
+    if (!isTableExits) {
+      Database db = await SqlManager.getCurrentDatabase();
+      return await db.execute(createSql);
+    }
+  }
+
+  @mustCallSuper
+  open() async {
+    if (!isTableExits) {
+      await prepare(getTableName(), createTableString());
+    }
+    return await SqlManager.getCurrentDatabase();
+  }
+}
+
+
+//User.dart
+import 'package:sqflite/sqlite_api.dart';
+import 'package:learn_ff/db/db_operator.dart';
+
+class User{
+
+  User();
+  User.of(String name, int age){
+    this._name = name;
+    this._age = age;
+  }
+  User.fromMapObject(Map<String, dynamic> map){
+    this._id = map['id'];
+    this._name = map['name'];
+    this._age = map['age'];
+  }
+
+  int _id;
+  String _name;
+  int _age;
+
+  int get id => _id;
+  String get name => _name;
+  int get age => _age;
+
+  set id(int value){
+    _id = value;
+  }
+
+  set name(String value){
+    _name = name;
+  }
+
+  set age(int value){
+    _age = value;
+  }
+
+  Map<String, dynamic> toMap(){
+    var map = Map<String, dynamic>();
+    map['id'] =  _id;
+    map['name'] = _name;
+    map['age'] = _age;
+    return map;
+  }
+
+  String toString(){
+    return "User[id:$_id, name:$_name, age:$_age]";
+  }
+
+}
+
+class UserDbProvider extends BaseDbProvider{
+
+  UserDbProvider();
+
+  String tableName = 'User';
+
+  final String columnId = "id";
+  final String columnName = "name";
+  final String columnAge = "age";
+
+  @override
+  createTableString() {
+
+    return '''
+      create table $tableName($columnId integer primary key, 
+      $columnName varchar(256) not null, 
+      $columnAge integer default 10)
+    ''';
+  }
+
+  @override
+  getTableName() {
+    return tableName;
+  }
+
+  Future<User> queryUserById(int id) async{
+    Database db = await getDataBase();
+    var list =  await db.rawQuery("select * from $tableName where $columnId = $id");
+    if(list.length > 0){
+      Map<String, dynamic> map = list[0];
+      var user = User.fromMapObject(map);
+      return user;
+    }
+    return null;
+  }
+
+  Future<List<User>> queryAllUser() async{
+    Database db = await getDataBase();
+    List<User> lists = new List();
+    var list = await db.query(tableName, orderBy: ' $columnId desc');
+    if(null != list && list.length > 0){
+      for (var item in list) {
+        var user = User.fromMapObject(item);
+        lists.add(user);
+      }
+    }
+    return lists;
+  }
+
+  Future<int> addUser(User user) async{
+    Database db = await getDataBase();
+    var result = await db.rawInsert("insert into $tableName($columnName, $columnAge)values(?,?)", [user.name, user.age]);
+    return result;
+  }
+
+  Future<int> updateUser(User user) async{
+    Database db = await getDataBase();
+    var result = await db.rawUpdate("update $tableName set $columnName =? , $columnAge = ? where $columnId = ?", [user.name, user.age, user.id]);
+    return result;
+  }
+
+  Future<int> deleteUser(int id) async{
+    Database db = await getDataBase();
+    var result = await db.rawDelete("delete from $tableName where $columnId = ?", [id]);
+    return result;
+  }
+
+}
+
+
+//sqlflite_demo.dart
+
+import 'package:flutter/material.dart';
+import 'package:learn_ff/db/user.dart';
+import 'package:learn_ff/view_code.dart';
+
+import '../asset_utils.dart';
+
+class SqlfLiteDemo extends StatefulWidget{
+  @override
+  _SqlfLiteDemoState createState() {
+    return new _SqlfLiteDemoState();
+  }
+}
+
+class _SqlfLiteDemoState extends State<SqlfLiteDemo>{
+
+  UserDbProvider db = new UserDbProvider();
+  List<User> datas = new List();
+  TextEditingController nameTextEditingController = new TextEditingController();
+  TextEditingController ageTextEditingController = new TextEditingController();
+
+  @override
+  void initState() {
+    this._getMetaData();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Sqlflite持久化操作示例"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.rate_review),
+            tooltip: '查看代码实现',
+            onPressed: ()=> {
+              AssetsUtils.loadAssetsString("doc/sqlflite_demo.txt").then(
+                (value){
+                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                      return new ViewCode(title: 'sqlflite持久化代码实现', content: value);
+                    }));
+                }
+              ).catchError(
+                (error){
+                  print("error happened! $error");
+                }
+              )
+            }
+          )
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          color: Colors.blueGrey,
+          child: Column(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(25.0),
+                color: Colors.white,
+                child: Center(
+                  child: Column(
+                    children: <Widget>[
+                      TextField(
+                        controller: nameTextEditingController,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(5.0),
+                          icon: Icon(Icons.account_circle),
+                          labelText: "用户名称",
+                        ),
+                      ), 
+                      TextField(
+                        controller: ageTextEditingController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(5.0),
+                          icon: Icon(Icons.account_circle),
+                          labelText: "年龄",
+                        ),
+                        onChanged: (value){
+                          
+                        },
+                      ), 
+                      Center(
+                        child: FlatButton(
+                          color: Colors.blue,
+                          onPressed: ()=>{
+                            this._add()
+                          }, 
+                          child: Text('新增', style: TextStyle(color:Colors.white),)
+                        ),
+                      ),
+                    ],
+                  ),  
+                ),
+              ),//Form
+              Center(
+                child: Text('从数据库中读取数据:',style: TextStyle(color: Colors.white, fontSize: 20),),
+              ),
+              //table
+              Container(
+                padding: EdgeInsets.all(30.0),
+                color: Colors.blueGrey,
+                child: Center(
+                  child: Column(
+                    children: _genData()
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _genData(){
+    List<Widget> list = new List();
+    var row = Row(
+      children: <Widget>[
+        Expanded(
+          child: Text('ID')
+        ),
+        Expanded(
+          child: Text('名称')
+        ),
+        Expanded(
+          child: Text('年龄')
+        ),
+        Expanded(
+          child: Text('操作')
+        )
+      ],
+    );
+    list.add(row);
+    if(null != datas){
+      //print('db: $value');
+      if(datas.length > 0){
+        for(int i=0; i<datas.length; i++){
+          print(datas[i]);
+          var row2 = Row(
+            children: <Widget>[
+              Expanded(
+                child: Text(datas[i].id.toString())
+              ),
+              Expanded(
+                child: Text(datas[i].name)
+              ),
+              Expanded(
+                child: Text(datas[i].age.toString())
+              ),
+              Expanded(
+                child: IconButton(
+                  icon: Icon(Icons.delete), 
+                  onPressed: ()=>{
+                    _delete(datas[i].id)
+                  }
+                )
+              ),
+            ],
+          );
+          list.add(row2);
+        }
+      }
+    }else{
+      list.add(Text('没有数据!'));
+    }
+    return list;
+  }
+
+  void _delete(int id){
+    db.deleteUser(id).then((value){
+      this._getMetaData();
+    });
+  }
+
+  void _add(){
+    print("name: "+nameTextEditingController.text);
+    User user = User.of(nameTextEditingController.text, int.parse(ageTextEditingController.text));
+    // user.name = nameTextEditingController.text;
+    // user.age = int.parse(ageTextEditingController.text);
+    db.addUser(user).then((value){
+      this._getMetaData();
+    });
+  }
+
+  _getMetaData(){
+    db.queryAllUser().then((value){
+      setState(() {
+        datas = value;
+        nameTextEditingController.text = '';
+        ageTextEditingController.text = '0';
+      });
+    });
+  }
+
+}
+
+
+
+
+
+
