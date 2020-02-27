@@ -1,0 +1,103 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:learn_ff/view_code.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../asset_utils.dart';
+
+class CameraDemo extends StatefulWidget{
+  @override
+  _CameraDemoState createState() {
+    return new _CameraDemoState();
+  }
+
+}
+
+class _CameraDemoState extends State<CameraDemo>{
+
+  File _image;
+
+  var _imgPath;
+
+
+  Future _getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      _image = image;
+    });
+  }
+
+  _openGallery() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _imgPath = image;
+    });
+  }
+
+  Widget _ImageView(imgPath) {
+    if (imgPath == null) {
+      return Center(
+        child: Text("请选择图片或拍照"),
+      );
+    } else {
+      return Image.file(
+        imgPath,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("相册摄像头示例"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.rate_review),
+            tooltip: '查看代码实现',
+            onPressed: ()=> {
+              AssetsUtils.loadAssetsString("doc/camera_demo.txt").then(
+                (value){
+                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                      return new ViewCode(title: '相册摄像头示例', content: value);
+                    }));
+                }
+              ).catchError(
+                (error){
+                  print("error happened! $error");
+                }
+              )
+            }
+          )
+        ],
+      ),
+      body: SingleChildScrollView(
+       child: Column(
+        children: <Widget>[
+          _ImageView(_imgPath),
+          Container(
+            color: Colors.yellowAccent,
+            child: _image == null
+                ? Text('没有照片.')
+                : Image.file(_image),
+          ),
+          Container(
+           color: Colors.blueGrey,
+           child: RaisedButton(
+                onPressed: _openGallery,
+                child: Text("选择照片"),
+            ), 
+          )
+        ], 
+       ), 
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _getImage,
+        tooltip: '打开摄像头',
+        child: Icon(Icons.add_a_photo),
+      ),
+    );
+  }
+}

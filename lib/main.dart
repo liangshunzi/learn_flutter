@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:learn_ff/asset_utils.dart';
 import 'package:learn_ff/button/button_demo.dart';
+import 'package:learn_ff/camera/camera_demo.dart';
 import 'package:learn_ff/db/sqlflite_demo.dart';
+import 'package:learn_ff/device/DeviceDemo.dart';
 import 'package:learn_ff/form/form_demo.dart';
 import 'package:learn_ff/gesturedetector/gesturedetector_demo.dart';
 import 'package:learn_ff/gridview/gridview_demo.dart';
@@ -53,6 +55,8 @@ class ContentShow extends StatelessWidget {
     "GRID":"网络组件(下拉刷新上拉加载)",
     "GESTUREDETECTOR":"手势组件",
     "SQFLITE":"持久化sqflite操作",
+    "DEVICE":"手机基本设备访问",
+    "CAMERA":"摄像头及相册访问",
   };
 
   @override
@@ -187,6 +191,16 @@ class ContentShow extends StatelessWidget {
       case 'SQFLITE':
         Navigator.push(context, MaterialPageRoute(builder: (context){
           return SqlfLiteDemo();
+        }));
+        break;
+      case 'DEVICE':
+        Navigator.push(context, MaterialPageRoute(builder: (context){
+          return DeviceDemo();
+        }));
+        break;
+      case 'CAMERA':
+        Navigator.push(context, MaterialPageRoute(builder: (context){
+          return CameraDemo();
         }));
         break;
       default:
